@@ -1,0 +1,87 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 40px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.navigation {
+    text-align: center;
+    margin-top: 30px;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.company-card {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+
+/* ---------- Navbar ---------- */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 12px 40px;
+
+    background-color: #ffffff;
+    border-bottom: 1px solid #ddd;
+}
+
+.logo a {
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bold;
+    color: #2563eb;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+}
+
+.nav-links a:hover {
+    color: #2563eb;
+}
+
+#logoutBtn {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 6px;
+
+    background-color: #2563eb;
+    color: white;
+
+    cursor: pointer;
+}
+
+#logoutBtn:hover {
+    background-color: #1d4ed8;
+}
+
+.nav-links a.active {
+    color: #2563eb;
+    font-weight: 600;
+    border-bottom: 2px solid #2563eb;
+    padding-bottom: 5px;
+}

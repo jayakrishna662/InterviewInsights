@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Experience</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        <a href="/">Interview Insights</a>
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">Home</a>
+
+        <a href="/companies">Companies</a>
+
+        <a id="loginLink" href="/auth">Login</a>
+
+        <a id="signupLink" href="/auth?tab=signup">Sign Up</a>
+
+        <span id="welcomeText" style="display: none;"></span>
+
+        <button id="logoutBtn" style="display: none;">
+            Logout
+        </button>
+
+    </div>
+
+</nav>
+
+<div id="content">
+
+    <h1>Submit Interview Experience</h1>
+
+    <form id="experienceForm">
+
+        <div>
+            <label>Company</label>
+            <select id="companySelect" required>
+                <option value="">Select Company</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Interview Year</label>
+            <input type="number" id="interviewYear" required>
+        </div>
+
+        <div>
+            <label>Result</label>
+
+            <select id="result" required>
+                <option value="">Select Result</option>
+                <option value="SELECTED">Selected</option>
+                <option value="REJECTED">Rejected</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Aptitude Experience</label>
+            <textarea id="aptitudeExperience"></textarea>
+        </div>
+
+        <div>
+            <label>Coding Experience</label>
+            <textarea id="codingExperience"></textarea>
+        </div>
+
+        <div>
+            <label>Technical Experience</label>
+            <textarea id="technicalExperience"></textarea>
+        </div>
+
+        <div>
+            <label>HR Experience</label>
+            <textarea id="hrExperience"></textarea>
+        </div>
+
+        <div>
+            <label>GD Experience</label>
+            <textarea id="gdExperience"></textarea>
+        </div>
+
+        <div>
+            <label>Overall Suggestions</label>
+            <textarea id="overallSuggestions"></textarea>
+        </div>
+
+        <button type="submit">
+            Submit Experience
+        </button>
+
+    </form>
+
+</div>
+
+<script src="js/common.js"></script>
+<script src="js/submit-experience.js"></script>
+
+</body>
+</html>

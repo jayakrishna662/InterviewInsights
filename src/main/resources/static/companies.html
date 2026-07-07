@@ -25,7 +25,11 @@
 
     <a id="signupLink" href="/auth?tab=signup">Sign Up</a>
 
-    <span id="welcomeText" style="display: none;"></span>
+    <!-- ADD THIS -->
+    <div class="user-info" id="userInfo" style="display: none;">
+      <span class="user-icon">👤</span>
+      <span id="welcomeText"></span>
+    </div>
 
     <button id="logoutBtn" style="display:none;">
       Logout
@@ -35,9 +39,11 @@
 
 </nav>
 
-<h1>Companies</h1>
+<div class="page-header">
+  <h1>Companies</h1>
+</div>
 
-<div id="content">
+<div id="content" class="companies-container">
 
 </div>
 <script src="js/common.js"></script>

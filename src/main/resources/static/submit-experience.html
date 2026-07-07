@@ -25,9 +25,12 @@
 
         <a id="signupLink" href="/auth?tab=signup">Sign Up</a>
 
-        <span id="welcomeText" style="display: none;"></span>
+        <div class="user-info" id="userInfo" style="display: none;">
+            <span class="user-icon">👤</span>
+            <span id="welcomeText"></span>
+        </div>
 
-        <button id="logoutBtn" style="display: none;">
+        <button id="logoutBtn" style="display:none;">
             Logout
         </button>
 
@@ -35,69 +38,117 @@
 
 </nav>
 
-<div id="content">
+<div class="form-container">
 
-    <h1>Submit Interview Experience</h1>
+    <div class="form-card">
 
-    <form id="experienceForm">
+        <h1>Submit Interview Experience</h1>
 
-        <div>
-            <label>Company</label>
-            <select id="companySelect" required>
-                <option value="">Select Company</option>
-            </select>
-        </div>
+        <form id="experienceForm">
 
-        <div>
-            <label>Interview Year</label>
-            <input type="number" id="interviewYear" required>
-        </div>
+            <div class="form-group">
+                <label for="companySelect">Company</label>
 
-        <div>
-            <label>Result</label>
+                <select id="companySelect" required>
+                    <option value="">Select Company</option>
+                </select>
+            </div>
 
-            <select id="result" required>
-                <option value="">Select Result</option>
-                <option value="SELECTED">Selected</option>
-                <option value="REJECTED">Rejected</option>
-            </select>
-        </div>
+            <div class="form-group">
+                <label for="interviewYear">Interview Year</label>
 
-        <div>
-            <label>Aptitude Experience</label>
-            <textarea id="aptitudeExperience"></textarea>
-        </div>
+                <input
+                        type="number"
+                        id="interviewYear"
+                        placeholder="Example: 2025"
+                        required>
+            </div>
 
-        <div>
-            <label>Coding Experience</label>
-            <textarea id="codingExperience"></textarea>
-        </div>
+            <div class="form-group">
+                <label for="result">Result</label>
 
-        <div>
-            <label>Technical Experience</label>
-            <textarea id="technicalExperience"></textarea>
-        </div>
+                <select id="result" required>
+                    <option value="">Select Result</option>
+                    <option value="SELECTED">Selected</option>
+                    <option value="REJECTED">Rejected</option>
+                </select>
+            </div>
 
-        <div>
-            <label>HR Experience</label>
-            <textarea id="hrExperience"></textarea>
-        </div>
+            <hr>
 
-        <div>
-            <label>GD Experience</label>
-            <textarea id="gdExperience"></textarea>
-        </div>
+            <div class="form-group">
+                <label for="aptitudeExperience">
+                    Aptitude Experience
+                </label>
 
-        <div>
-            <label>Overall Suggestions</label>
-            <textarea id="overallSuggestions"></textarea>
-        </div>
+                <textarea
+                        id="aptitudeExperience"
+                        rows="4"
+                        placeholder="Share your aptitude round experience..."></textarea>
+            </div>
 
-        <button type="submit">
-            Submit Experience
-        </button>
+            <div class="form-group">
+                <label for="codingExperience">
+                    Coding Experience
+                </label>
 
-    </form>
+                <textarea
+                        id="codingExperience"
+                        rows="4"
+                        placeholder="Share your coding round experience..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="technicalExperience">
+                    Technical Experience
+                </label>
+
+                <textarea
+                        id="technicalExperience"
+                        rows="4"
+                        placeholder="Share your technical interview experience..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="hrExperience">
+                    HR Experience
+                </label>
+
+                <textarea
+                        id="hrExperience"
+                        rows="4"
+                        placeholder="Share your HR interview experience..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="gdExperience">
+                    GD Experience
+                </label>
+
+                <textarea
+                        id="gdExperience"
+                        rows="4"
+                        placeholder="Share your group discussion experience..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="overallSuggestions">
+                    Overall Suggestions
+                </label>
+
+                <textarea
+                        id="overallSuggestions"
+                        rows="4"
+                        placeholder="Any suggestions for other students?"></textarea>
+            </div>
+
+            <button class="submit-btn" type="submit">
+                Submit Experience
+            </button>
+
+        </form>
+
+    </div>
 
 </div>
 

@@ -23,6 +23,7 @@ async function updateNavbar() {
     const signupLink = document.getElementById("signupLink");
     const logoutBtn = document.getElementById("logoutBtn");
     const welcomeText = document.getElementById("welcomeText");
+    const userInfo = document.getElementById("userInfo");
 
     if (!loginLink || !signupLink || !logoutBtn || !welcomeText) {
         return;
@@ -33,6 +34,7 @@ async function updateNavbar() {
         signupLink.style.display = "inline-block";
         logoutBtn.style.display = "none";
         welcomeText.style.display = "none";
+        if (userInfo) userInfo.style.display = "none";
         return;
     }
 
@@ -50,7 +52,11 @@ async function updateNavbar() {
         loginLink.style.display = "none";
         signupLink.style.display = "none";
 
-        welcomeText.textContent = `Welcome, ${user.name}`;
+        if (userInfo) {
+            userInfo.style.display = "flex";
+        }
+
+        welcomeText.textContent = user.name;
         welcomeText.style.display = "inline";
 
         logoutBtn.style.display = "inline-block";

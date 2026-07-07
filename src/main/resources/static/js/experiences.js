@@ -18,7 +18,7 @@ async function loadCompanies() {
       content.innerHTML += `
           <div
               class="company-card"
-              onclick="loadExperiences(${company.id})">
+              onclick="loadExperiences(${company.id},'${company.companyName}')">
 
               ${company.companyName}
 
@@ -31,8 +31,9 @@ async function loadCompanies() {
 }
 
 window.loadExperiences =
-    async function(companyId) {
+    async function(companyId,companyName) {
 
+    document.querySelector('h1').textContent = companyName;
         const response =
                 await fetch(
                     `/api/interview-experiences/company/${companyId}`,
@@ -93,8 +94,6 @@ window.loadExperienceDetails =
                     content.innerHTML = "";
 
             content.innerHTML = `
-                <h2>${experience.companyName}</h2>
-
                 <p>
                     <strong>Result:</strong>
                     ${experience.result}

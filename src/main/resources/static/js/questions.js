@@ -1,5 +1,7 @@
 requireAuthentication();
 async function loadViewCompanyWise() {
+    const filtersDiv =
+            document.getElementById("filters");
     const content =
             document.getElementById("content");
 
@@ -24,9 +26,10 @@ async function loadViewCompanyWise() {
         `;
     });
 
-    // Display form with dropdowns
-    content.innerHTML = `
-        <h2>View Company-Wise Questions</h2>
+
+  // Display form with dropdowns
+      filtersDiv.innerHTML = `
+          <h2>View Company-Wise Questions</h2>
 
         <div>
             <label>Company:</label>

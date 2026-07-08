@@ -25,12 +25,13 @@
 
     <a id="signupLink" href="/auth?tab=signup">Sign Up</a>
 
-    <!-- ADD THIS -->
+    <!-- User info, initially hidden, shows when logged in with user icon and user_name -->
     <div class="user-info" id="userInfo" style="display: none;">
       <span class="user-icon">👤</span>
       <span id="welcomeText"></span>
     </div>
 
+    <!-- hidden initially, shows when logged in -->
     <button id="logoutBtn" style="display:none;">
       Logout
     </button>
@@ -43,9 +44,13 @@
   <h1>Companies</h1>
 </div>
 
-<div id="content" class="companies-container">
 
-</div>
+
+<!-- Initially empty container where companies will be displayed
+  js(companies.js) fetches companies from backend and creates HTML for each company
+  and inserts that HTML into this container -->
+
+<div id="content" class="companies-container"></div>
 <script src="js/common.js"></script>
 <script src="js/companies.js"></script>
 

@@ -6,13 +6,23 @@
 
     <div class="nav-links">
 
+        <!-- When clicked on Home navbar it takes to Home page -->
         <a id="homeLink" href="/">Home</a>
 
+        <!-- When clicked on Companies from navbar it takes to companies page -->
         <a id="companiesLink" href="/companies.html">Companies</a>
 
+        <!-- When clicked on Login  from navbar it takes to login page -->
         <a id="loginLink" href="/auth">Login</a>
 
+        <!-- When clicked on Sign up from navbar it takes to register page -->
         <a id="signupLink" href="/auth?tab=signup">Sign Up</a>
+
+
+        <!-- logout button is hidden by default
+            JavaScript (common.js) will:
+            Show it when user logs in
+            Hide it when user logs out -->
 
         <button id="logoutBtn" style="display: none;">
             Logout

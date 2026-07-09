@@ -9,7 +9,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
-@Configuration  // Tells spring that This class contains application configuration.
+// This class creates and stores security-related tools and settings.
+// This class is mainly used to create reusable objects (Beans) that other classes need.
+// Eg: BCryptPasswordEncoder and CorsConfigurationSource are reusable beans
+
+
+@Configuration  // tells Spring "this class has configuration settings"
 public class SecurityConfig {
 
     // Create a BCryptPasswordEncoder Bean that can be shared across the application.

@@ -10,8 +10,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-// This file is configuration file for Spring Security.
-
+// This Class provides configuration for Spring Security.
+// This Class controls access and enforce security for every incoming request.
 
 @Configuration // This class contains configuration settings.
 @EnableWebSecurity // Turn on Spring Security.

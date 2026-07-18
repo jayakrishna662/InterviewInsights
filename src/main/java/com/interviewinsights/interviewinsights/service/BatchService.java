@@ -18,6 +18,8 @@ public class BatchService {
         this.batchRepository = batchRepository;
     }
 
+    //  create batch object by taking batch name from request, set ID, created time and save this batch object to DB
+    //  create batch response object and return to controller
     public BatchResponse createBatch(BatchRequest request) {
 
         Batch batch = new Batch();
@@ -34,12 +36,16 @@ public class BatchService {
         return response;
 
     }
+
+    // Get all Batches from DB ad return to controller
     public List<BatchResponse> getAllBatches() {
-        List<Batch> batches = batchRepository.findAll();
+        List<Batch> batches = batchRepository.findAll(); // contains all Batches with each batch object containing (ID, BatchName)
 
-        return batches.stream()
-                .map(batch -> {
 
+        return batches.stream() // process each batch object one by one
+                .map(batch -> {  // For each Batch, create a BatchResponse.
+
+                    // Copies the data from the Batch entity into a BatchResponse.
                     BatchResponse response = new BatchResponse();
 
                     response.setId(batch.getId());
@@ -49,17 +55,22 @@ public class BatchService {
                     return response;
 
                 })
-                .toList();
+                .toList(); // Collects all the BatchResponse objects into a list and returns it.
     }
 
+    // update an existing batch in the database and return the updated details.
     public BatchResponse updateBatch(Long id, BatchRequest request) {
+
+        // Search the database for the batch with the given ID.
+        // If no batch exists with that ID, orElseThrow() throws an exception.
         Batch batch = batchRepository.findById(id)
                 .orElseThrow();
 
-        batch.setBatchName(request.getBatchName());
+        batch.setBatchName(request.getBatchName()); // Updates the batch name with the new value from the request.
 
-        Batch updatedBatch = batchRepository.save(batch);
+        Batch updatedBatch = batchRepository.save(batch); // Saves the updated batch back to the database.
 
+        // Return the updated batch details by creating Response object
         BatchResponse response = new BatchResponse();
 
         response.setId(updatedBatch.getId());

@@ -17,16 +17,19 @@ public class CompanyController {
         this.companyService = companyService;
     }
 
+    // Receives company data from client, passes to service and returns created company details
     @PostMapping
     public CompanyResponse createCompany(@RequestBody CompanyRequest request) {
         return companyService.createCompany(request);
     }
 
+    // Retrieves all companies
     @GetMapping
     public List<CompanyResponse> getAllCompanies() {
         return companyService.getAllCompanies();
     }
 
+    // Update an existing company
     @PutMapping("/{id}")
     public CompanyResponse updateCompany(@PathVariable Long id,
                                          @RequestBody CompanyRequest request) {

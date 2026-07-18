@@ -18,6 +18,7 @@ public class CompanyService {
         this.companyRepository = companyRepository;
     }
 
+    // Creates a new company, saves it to the database, and returns the saved company details by creating response object.
     public CompanyResponse createCompany(CompanyRequest request) {
 
         Company company = new Company();
@@ -35,6 +36,8 @@ public class CompanyService {
 
         return response;
     }
+
+    // Retrieves all companies from the database and returns them.
     public List<CompanyResponse> getAllCompanies() {
 
         List<Company> companies = companyRepository.findAll();
@@ -53,6 +56,7 @@ public class CompanyService {
                 .toList();
     }
 
+    // Updates an existing company and returns the updated details.
     public CompanyResponse updateCompany(Long id, CompanyRequest request) {
 
         Company company = companyRepository.findById(id)

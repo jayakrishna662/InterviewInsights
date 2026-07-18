@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+// Represents the  company data that is sent back to the client after creating, retrieving, or updating a company.
 public class CompanyResponse {
 
     private Long id;

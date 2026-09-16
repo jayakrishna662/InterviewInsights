@@ -43,4 +43,5 @@ Thumbs.db
 .env
 application-local.properties
 application-secret.properties
-src/main/resources/application.properties
+
+*.dump

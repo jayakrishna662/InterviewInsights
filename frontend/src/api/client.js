@@ -1,6 +1,6 @@
 // Lightweight API client with automatic JWT token attachment and error handling
 
-const API_BASE = '/api';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 
 export async function apiRequest(endpoint, options = {}) {
   const token = localStorage.getItem('token');

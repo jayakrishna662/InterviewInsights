@@ -30,7 +30,7 @@ public class SecurityConfig {
         //Create an empty CORS settings object
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:5173")); // Allow requests from React dev servers (CRA/Next on 3000, Vite on 5173)
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:5173", "https://interviewinsights-frontend.onrender.com")); // Allow requests from React dev servers (CRA/Next on 3000, Vite on 5173)
         configuration.setAllowedMethods(
                 Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")); // Allow these http methods 
         configuration.setAllowedHeaders(Arrays.asList("*")); // Allow any request headers

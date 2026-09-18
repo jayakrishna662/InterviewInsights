@@ -1,7 +1,5 @@
 package com.interviewinsights.interviewinsights.controller;
 
-import com.interviewinsights.interviewinsights.dto.UserRegistrationRequest;
-import com.interviewinsights.interviewinsights.entity.User;
 import com.interviewinsights.interviewinsights.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,11 +14,6 @@ public class UserController {
 
     public UserController(UserService userService) {
         this.userService = userService;
-    }
-
-    @PostMapping("/register")
-    public UserResponse registerUser(@RequestBody UserRegistrationRequest request) {
-        return userService.registerUser(request);
     }
 
     @GetMapping

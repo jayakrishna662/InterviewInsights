@@ -1,19 +1,15 @@
 package com.interviewinsights.interviewinsights.service;
 
 import com.interviewinsights.interviewinsights.dto.CurrentUserResponse;
-import com.interviewinsights.interviewinsights.entity.Batch;
-import com.interviewinsights.interviewinsights.entity.Department;
-import com.interviewinsights.interviewinsights.entity.enums.Role;
-import com.interviewinsights.interviewinsights.exception.EmailAlreadyExistsException;
+
 import com.interviewinsights.interviewinsights.repository.BatchRepository;
 import com.interviewinsights.interviewinsights.repository.DepartmentRepository;
 import com.interviewinsights.interviewinsights.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import com.interviewinsights.interviewinsights.dto.UserRegistrationRequest;
+
 import com.interviewinsights.interviewinsights.entity.User;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import com.interviewinsights.interviewinsights.dto.UserResponse;
@@ -38,35 +34,6 @@ public class UserService {
         return userRepository.findByEmail(email).isPresent();
     }
 
-    public UserResponse registerUser(UserRegistrationRequest request) {
-
-        if (existsByEmail(request.getEmail())) {
-            throw new EmailAlreadyExistsException("Email already registered");
-        }
-        Long batchId = request.getBatchId();
-        Batch batch = batchRepository.findById(batchId)
-                .orElseThrow();
-
-        User user = new User();
-
-        user.setName(request.getName());
-        user.setEmail(request.getEmail());
-        user.setRollNumber(request.getRollNumber());
-        // Get department from database
-        Department department = departmentRepository.findById(Long.parseLong(request.getDepartmentId()))
-                .orElseThrow(() -> new RuntimeException("Department not found"));
-        user.setDepartment(department);
-        user.setBatch(batch);
-        user.setRole(Role.USER);
-        user.setCreatedAt(LocalDateTime.now());
-
-        // temporary (will be replaced later)
-        user.setPasswordHash(request.getPassword());
-
-        User savedUser = userRepository.save(user);
-
-        return mapToUserResponse(savedUser);
-    }
 
 
     public List<UserResponse> getAllUsers() {

@@ -5,6 +5,7 @@ import com.interviewinsights.interviewinsights.dto.InterviewExperienceResponse;
 import com.interviewinsights.interviewinsights.service.InterviewExperienceService;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class InterviewExperienceController {
 
     @PostMapping
     public InterviewExperienceResponse createInterviewExperience(
-            @RequestBody InterviewExperienceRequest request,
+            @Valid @RequestBody InterviewExperienceRequest request,
             Authentication authentication) {
 
         Long userId = (Long) authentication.getPrincipal();

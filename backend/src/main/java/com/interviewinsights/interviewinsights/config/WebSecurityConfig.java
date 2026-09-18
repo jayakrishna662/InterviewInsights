@@ -11,6 +11,9 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.http.SessionCreationPolicy;
+
+import com.interviewinsights.interviewinsights.security.RateLimitFilter;
 
 // This Class provides configuration for Spring Security.
 // This Class controls access and enforce security for every incoming request.
@@ -23,9 +26,12 @@ public class WebSecurityConfig {
 
     private final JwtFilter jwtFilter;
 
-    public WebSecurityConfig(CorsConfigurationSource corsConfigurationSource,JwtFilter jwtFilter) {
+    private final RateLimitFilter rateLimitFilter;
+
+    public WebSecurityConfig(CorsConfigurationSource corsConfigurationSource,JwtFilter jwtFilter,  RateLimitFilter rateLimitFilter) {
         this.corsConfigurationSource = corsConfigurationSource;
         this.jwtFilter = jwtFilter;
+         this.rateLimitFilter = rateLimitFilter;
     }
 
 
@@ -41,19 +47,28 @@ public class WebSecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource)) // Use the CORS rules from our CorsConfig class,so that browser talks to server from different origins.
                 .csrf(csrf -> csrf.disable())  // Turn off CSRF protection.
+                .sessionManagement(session ->
+    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+)
                 .authorizeHttpRequests(authz -> authz // Decide who is allowed to access which URLs.
-                        .requestMatchers("/api/auth/**").permitAll()  // Anyone can access Anything starting with /api/auth/
+                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()  // Anyone can access registration and login
                         .requestMatchers(HttpMethod.GET, "/api/companies/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/departments/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/batches/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/batches/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/departments/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/batches/**").permitAll()
-                        .requestMatchers("/api/test/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/companies/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/companies/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/companies/**").hasRole("ADMIN")
                         .requestMatchers("/api/health").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/questions/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/experience-questions/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
+                .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
 

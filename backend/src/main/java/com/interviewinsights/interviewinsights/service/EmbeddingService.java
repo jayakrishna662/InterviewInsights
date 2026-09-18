@@ -8,6 +8,9 @@ import com.interviewinsights.interviewinsights.dto.embedding.EmbeddingResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class EmbeddingService {
 
@@ -20,37 +23,39 @@ public class EmbeddingService {
     private final RestClient restClient = RestClient.create();
 
 
-    public String generateEmbedding(String text){
+    public String generateEmbedding(String text) {
 
-        String requestBody = """
-            {
-              "model": "models/gemini-embedding-001",
-              "content": {
-                "parts": [
-                  {
-                    "text": "%s"
-                  }
-                ]
-              }
-            }
-            """.formatted(text);
+    try {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Map<String, Object> requestBody = Map.of(
+                "model", "models/gemini-embedding-001",
+                "content", Map.of(
+                        "parts", List.of(
+                                Map.of("text", text)
+                        )
+                )
+        );
+
+        String requestJson = objectMapper.writeValueAsString(requestBody);
 
         String response = restClient.post()
-                .uri(embeddingUrl + "?key=" + apiKey)
+                .uri(embeddingUrl)
+                .header("x-goog-api-key", apiKey)
                 .header("Content-Type", "application/json")
-                .body(requestBody)
+                .body(requestJson)
                 .retrieve()
                 .body(String.class);
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
 
-            EmbeddingResponse embeddingResponse =
-                    objectMapper.readValue(response, EmbeddingResponse.class);
+        EmbeddingResponse embeddingResponse =
+                objectMapper.readValue(response, EmbeddingResponse.class);
 
-            return embeddingResponse.getEmbedding().getValues().toString();
-        }catch (JsonProcessingException e){
-            throw new RuntimeException("Failed to parse embedding response",e);
-        }
+        return embeddingResponse.getEmbedding().getValues().toString();
+
+    } catch (JsonProcessingException e) {
+        throw new RuntimeException(
+                "Failed to process embedding request/response", e);
     }
+}
 
 }

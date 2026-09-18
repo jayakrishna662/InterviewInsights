@@ -10,6 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -26,7 +30,7 @@ public class AuthController {
     // when registration form is submitted , this code runs
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(
-            @RequestBody AuthRegisterRequest request) { // request object contains form inputs
+            @Valid @RequestBody AuthRegisterRequest request) { // request object contains form inputs
 
         // Registration request is send to service and  response is received from service
         // If any validation fails, service throws an exception and GlobalExceptionHandler handles it.
@@ -43,7 +47,7 @@ public class AuthController {
     // when login form is submitted, this code runs
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(
-            @RequestBody AuthLoginRequest request) {
+            @Valid @RequestBody AuthLoginRequest request) {
 
         // Login request is sent to service and response is received from service
         // If user is not found or password is invalid,
@@ -54,6 +58,34 @@ public class AuthController {
         // Return HTTP 200 OK along with the response object.
         return ResponseEntity
                 .status(HttpStatus.OK)
+                .body(response);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<AuthResponse> handleValidationError(
+            MethodArgumentNotValidException ex) {
+
+        String message = ex.getBindingResult().getFieldErrors().isEmpty()
+                ? "Invalid request"
+                : ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
+
+        return badRequest(message);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<AuthResponse> handleMalformedJson(
+            HttpMessageNotReadableException ex) {
+
+        return badRequest("Malformed request body");
+    }
+
+    private ResponseEntity<AuthResponse> badRequest(String message) {
+        AuthResponse response = new AuthResponse();
+        response.setSuccess(false);
+        response.setMessage(message);
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(response);
     }
 

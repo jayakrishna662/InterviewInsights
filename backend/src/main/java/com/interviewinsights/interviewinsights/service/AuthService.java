@@ -12,6 +12,7 @@ import com.interviewinsights.interviewinsights.repository.BatchRepository;
 import com.interviewinsights.interviewinsights.repository.DepartmentRepository;
 import com.interviewinsights.interviewinsights.repository.UserRepository;
 import com.interviewinsights.interviewinsights.util.JwtUtil;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -59,8 +60,10 @@ public class AuthService {
             throw new EmailAlreadyExistsException("Email already registered");
         }
 
+        String rollNumber = request.getRollNumber().trim();
+
         // Check if roll number already exists
-        if (userRepository.findByRollNumber(request.getRollNumber()).isPresent()) {
+        if (userRepository.findByRollNumber(rollNumber).isPresent()) {
             throw new RollNumberAlreadyExistsException("Roll number already registered");
         }
 
@@ -76,7 +79,7 @@ public class AuthService {
         User user = new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail() != null ? request.getEmail().trim() : null);
-        user.setRollNumber(request.getRollNumber() != null ? request.getRollNumber().trim() : null);
+        user.setRollNumber(rollNumber);
         user.setDepartment(department);
         user.setBatch(batch); // Set the retrieved Batch object to the User.
         user.setRole(Role.USER); // Every newly registered user gets USER role automatically
@@ -88,7 +91,15 @@ public class AuthService {
 
         // Saving user object into database , .save() returns saved user object
         // after saving, now savedUser has id along with above entities you set
-        User savedUser = userRepository.save(user);
+        User savedUser;
+        try {
+            savedUser = userRepository.saveAndFlush(user);
+        } catch (DataIntegrityViolationException ex) {
+            if (isRollNumberConstraintViolation(ex)) {
+                throw new RollNumberAlreadyExistsException("Roll number already registered");
+            }
+            throw ex;
+        }
 
         // Return response
         AuthResponse response = new AuthResponse();
@@ -102,31 +113,58 @@ public class AuthService {
         return response;
     }
 
+    private boolean isRollNumberConstraintViolation(
+            DataIntegrityViolationException ex) {
+
+        Throwable cause = ex;
+        while (cause != null) {
+            if (cause.getMessage() != null
+                    && cause.getMessage().contains("uk_users_roll_number")) {
+                return true;
+            }
+            cause = cause.getCause();
+        }
+        return false;
+    }
+
     // Login user
     public AuthResponse login(AuthLoginRequest request) {
 
-        String rollNumber = request.getRollNumber() != null ? request.getRollNumber().trim() : "";
+    String rollNumber = request.getRollNumber() != null
+            ? request.getRollNumber().trim()
+            : "";
 
-        // Find user by roll number
-        User user = userRepository.findByRollNumber(rollNumber)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+    User user = userRepository.findByRollNumber(rollNumber)
+            .orElseThrow(() ->
+                    new InvalidPasswordException("Invalid roll number or password"));
 
-        // Check password matches with the password in DB
-        // BCrypt takes user entered password and hashes it internally and compares it with stored hash in DB
-        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
-            throw new InvalidPasswordException("Invalid password");
-        }
+    if (!passwordEncoder.matches(
+            request.getPassword(),
+            user.getPasswordHash())) {
 
-        // Return response
-        AuthResponse response = new AuthResponse();
-        response.setUserId(user.getId());
-        response.setName(user.getName());
-        response.setEmail(user.getEmail());
-        response.setRole(user.getRole());
-        response.setSuccess(true);
-        response.setMessage("Login successful");
-        response.setToken(jwtUtil.generateToken(user.getId(), user.getName(), user.getRole() != null ? user.getRole().name() : null));
-
-        return response;
+        throw new InvalidPasswordException("Invalid roll number or password");
     }
+
+    AuthResponse response = new AuthResponse();
+
+    response.setUserId(user.getId());
+    response.setName(user.getName());
+    response.setEmail(user.getEmail());
+    response.setRole(user.getRole());
+
+    response.setSuccess(true);
+    response.setMessage("Login successful");
+
+    response.setToken(
+            jwtUtil.generateToken(
+                    user.getId(),
+                    user.getName(),
+                    user.getRole() != null
+                            ? user.getRole().name()
+                            : null
+            )
+    );
+
+    return response;
+}
 }

@@ -4,37 +4,34 @@ import com.interviewinsights.interviewinsights.entity.enums.AiProcessingStatus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.interviewinsights.interviewinsights.dto.gemini.response.ExtractedQuestionsResponse;
-import com.interviewinsights.interviewinsights.entity.ExperienceQuestion;
+
 import com.interviewinsights.interviewinsights.entity.InterviewExperience;
-import com.interviewinsights.interviewinsights.entity.Question;
-import com.interviewinsights.interviewinsights.entity.enums.QuestionCategory;
-import com.interviewinsights.interviewinsights.repository.ExperienceQuestionRepository;
+
+
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
+
 
 @Service
 public class AsyncQuestionProcessingService {
 
     private final GeminiService geminiService;
     private final ObjectMapper objectMapper;
-    private final QuestionService questionService;
-    private final ExperienceQuestionRepository experienceQuestionRepository;
+    
+    private final AiQuestionPersistenceService aiQuestionPersistenceService;
     private final InterviewExperienceRepository interviewExperienceRepository;
 
     public AsyncQuestionProcessingService(
             GeminiService geminiService,
             ObjectMapper objectMapper,
-            QuestionService questionService,
-            ExperienceQuestionRepository experienceQuestionRepository,
+            AiQuestionPersistenceService aiQuestionPersistenceService,
             InterviewExperienceRepository interviewExperienceRepository) {
 
         this.geminiService = geminiService;
         this.objectMapper = objectMapper;
-        this.questionService = questionService;
-        this.experienceQuestionRepository = experienceQuestionRepository;
+        this.aiQuestionPersistenceService = aiQuestionPersistenceService;
         this.interviewExperienceRepository = interviewExperienceRepository;
     }
 
@@ -44,8 +41,15 @@ public class AsyncQuestionProcessingService {
             String interviewText) {
 
         try {
-                savedExperience.setAiProcessingStatus(AiProcessingStatus.PROCESSING);
-                interviewExperienceRepository.save(savedExperience);
+                 int updated = interviewExperienceRepository.markAsProcessing(
+                        savedExperience.getId(),
+                        AiProcessingStatus.PROCESSING,
+                        AiProcessingStatus.PENDING
+                );
+
+                if (updated == 0) {
+                return;
+                }
 
             String extractedQuestions =
                     geminiService.extractQuestions(interviewText);
@@ -67,57 +71,65 @@ public class AsyncQuestionProcessingService {
                     objectMapper.readValue(
                             extractedQuestions,
                             ExtractedQuestionsResponse.class);
+        validateExtractedQuestions(response);
 
-            saveQuestions(response.getCoding(),
-                    QuestionCategory.CODING,
-                    savedExperience);
+            aiQuestionPersistenceService.saveAllQuestions(
+        response.getCoding(),
+        response.getTechnical(),
+        response.getHr(),
+        response.getAptitude(),
+        response.getGd(),
+        savedExperience
+);
 
-            saveQuestions(response.getTechnical(),
-                    QuestionCategory.TECHNICAL,
-                    savedExperience);
-
-            saveQuestions(response.getHr(),
-                    QuestionCategory.HR,
-                    savedExperience);
-
-            saveQuestions(response.getAptitude(),
-                    QuestionCategory.APTITUDE,
-                    savedExperience);
-
-            saveQuestions(response.getGd(),
-                    QuestionCategory.GD,
-                    savedExperience);
-                savedExperience.setAiProcessingStatus(AiProcessingStatus.COMPLETED);
+savedExperience.setAiProcessingStatus(AiProcessingStatus.COMPLETED);
 interviewExperienceRepository.save(savedExperience);
 
         } catch (Exception e) {
     savedExperience.setAiProcessingStatus(AiProcessingStatus.FAILED);
     interviewExperienceRepository.save(savedExperience);
 
-    System.err.println(
-            "Gemini extraction failed for experience "
-                    + savedExperience.getId());
+    e.printStackTrace();
 }
     }
 
-    private void saveQuestions(
-            List<String> questions,
-            QuestionCategory category,
-            InterviewExperience experience) {
 
-        for (String questionText : questions) {
 
-            Question savedQuestion =
-                    questionService.saveQuestion(questionText, category);
+    private void validateExtractedQuestions(ExtractedQuestionsResponse response) {
 
-            ExperienceQuestion experienceQuestion =
-                    new ExperienceQuestion();
+    if (response == null) {
+        throw new IllegalArgumentException("Invalid Gemini response");
+    }
 
-            experienceQuestion.setExperience(experience);
-            experienceQuestion.setQuestion(savedQuestion);
-            experienceQuestion.setCreatedAt(LocalDateTime.now());
+    validateList(response.getCoding());
+    validateList(response.getTechnical());
+    validateList(response.getHr());
+    validateList(response.getAptitude());
+    validateList(response.getGd());
+}
 
-            experienceQuestionRepository.save(experienceQuestion);
+private void validateList(List<String> questions) {
+
+    if (questions == null) {
+        return;
+    }
+
+    if (questions.size() > 30) {
+        throw new IllegalArgumentException(
+                "Gemini returned too many questions");
+    }
+
+    for (String question : questions) {
+
+        if (question == null || question.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Gemini returned an invalid question");
+        }
+
+        if (question.length() > 500) {
+            throw new IllegalArgumentException(
+                    "Gemini returned an excessively long question");
         }
     }
+}
 }

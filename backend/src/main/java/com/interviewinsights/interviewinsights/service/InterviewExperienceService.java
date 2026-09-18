@@ -1,14 +1,15 @@
 package com.interviewinsights.interviewinsights.service;
 
-
 import com.interviewinsights.interviewinsights.dto.InterviewExperienceRequest;
 import com.interviewinsights.interviewinsights.dto.InterviewExperienceResponse;
 import com.interviewinsights.interviewinsights.entity.*;
-import com.interviewinsights.interviewinsights.entity.enums.Result;
+import com.interviewinsights.interviewinsights.entity.enums.AiProcessingStatus;
 import com.interviewinsights.interviewinsights.repository.CompanyRepository;
 import com.interviewinsights.interviewinsights.repository.InterviewExperienceRepository;
 import com.interviewinsights.interviewinsights.repository.UserRepository;
 import org.springframework.stereotype.Service;
+
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,7 +24,8 @@ public class InterviewExperienceService {
     public InterviewExperienceService(
             InterviewExperienceRepository interviewExperienceRepository,
             UserRepository userRepository,
-            CompanyRepository companyRepository, AsyncQuestionProcessingService asyncQuestionProcessingService) {
+            CompanyRepository companyRepository,
+            AsyncQuestionProcessingService asyncQuestionProcessingService) {
 
         this.interviewExperienceRepository = interviewExperienceRepository;
         this.userRepository = userRepository;
@@ -32,15 +34,16 @@ public class InterviewExperienceService {
     }
 
     public InterviewExperienceResponse createInterviewExperience(
-            InterviewExperienceRequest request,Long userId) {
+            InterviewExperienceRequest request,
+            Long userId) {
 
         boolean hasExperience =
                 hasText(request.getAptitudeExperience()) ||
-                        hasText(request.getCodingExperience()) ||
-                        hasText(request.getTechnicalExperience()) ||
-                        hasText(request.getHrExperience()) ||
-                        hasText(request.getGdExperience()) ||
-                        hasText(request.getOverallSuggestions());
+                hasText(request.getCodingExperience()) ||
+                hasText(request.getTechnicalExperience()) ||
+                hasText(request.getHrExperience()) ||
+                hasText(request.getGdExperience()) ||
+                hasText(request.getOverallSuggestions());
 
         if (!hasExperience) {
             throw new IllegalArgumentException(
@@ -50,16 +53,33 @@ public class InterviewExperienceService {
         User user = userRepository.findById(userId)
                 .orElseThrow();
 
+        long experienceCount =
+                interviewExperienceRepository.countByUserId(userId);
+
+        if (experienceCount >= 20) {
+            throw new IllegalStateException(
+                    "You have reached the maximum number of interview experiences you can submit.");
+        }
+
         Company company = companyRepository.findById(request.getCompanyId())
-                .orElseThrow();
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Company not found"));
+
+        if (!company.isActive()) {
+            throw new IllegalArgumentException(
+                    "This company is currently inactive.");
+        }
 
         InterviewExperience experience = new InterviewExperience();
+
+        // Initial AI processing state
+        experience.setAiProcessingStatus(AiProcessingStatus.PENDING);
 
         experience.setUser(user);
         experience.setCompany(company);
 
         experience.setInterviewYear(request.getInterviewYear());
-        experience.setResult(Result.valueOf(request.getResult()));
+        experience.setResult(request.getResult());
 
         experience.setAptitudeExperience(request.getAptitudeExperience());
         experience.setCodingExperience(request.getCodingExperience());
@@ -72,25 +92,26 @@ public class InterviewExperienceService {
 
         InterviewExperience savedExperience =
                 interviewExperienceRepository.save(experience);
+
         String interviewText = """
-Coding Experience:
-%s
+                Coding Experience:
+                %s
 
-Technical Experience:
-%s
+                Technical Experience:
+                %s
 
-HR Experience:
-%s
+                HR Experience:
+                %s
 
-Aptitude Experience:
-%s
+                Aptitude Experience:
+                %s
 
-GD Experience:
-%s
+                GD Experience:
+                %s
 
-Overall Suggestions:
-%s
-""".formatted(
+                Overall Suggestions:
+                %s
+                """.formatted(
                 savedExperience.getCodingExperience(),
                 savedExperience.getTechnicalExperience(),
                 savedExperience.getHrExperience(),
@@ -103,7 +124,8 @@ Overall Suggestions:
                 savedExperience,
                 interviewText);
 
-        InterviewExperienceResponse response = new InterviewExperienceResponse();
+        InterviewExperienceResponse response =
+                new InterviewExperienceResponse();
 
         response.setId(savedExperience.getId());
 
@@ -111,22 +133,38 @@ Overall Suggestions:
         response.setUserName(savedExperience.getUser().getName());
 
         response.setCompanyId(savedExperience.getCompany().getId());
-        response.setCompanyName(savedExperience.getCompany().getCompanyName());
+        response.setCompanyName(
+                savedExperience.getCompany().getCompanyName());
 
-        response.setInterviewYear(savedExperience.getInterviewYear());
-        response.setResult(savedExperience.getResult().name());
+        response.setInterviewYear(
+                savedExperience.getInterviewYear());
 
-        response.setAptitudeExperience(savedExperience.getAptitudeExperience());
-        response.setCodingExperience(savedExperience.getCodingExperience());
-        response.setTechnicalExperience(savedExperience.getTechnicalExperience());
-        response.setHrExperience(savedExperience.getHrExperience());
-        response.setGdExperience(savedExperience.getGdExperience());
-        response.setOverallSuggestions(savedExperience.getOverallSuggestions());
+        response.setResult(
+                savedExperience.getResult().name());
 
-        response.setCreatedAt(savedExperience.getCreatedAt());
+        response.setAptitudeExperience(
+                savedExperience.getAptitudeExperience());
+
+        response.setCodingExperience(
+                savedExperience.getCodingExperience());
+
+        response.setTechnicalExperience(
+                savedExperience.getTechnicalExperience());
+
+        response.setHrExperience(
+                savedExperience.getHrExperience());
+
+        response.setGdExperience(
+                savedExperience.getGdExperience());
+
+        response.setOverallSuggestions(
+                savedExperience.getOverallSuggestions());
+
+        response.setCreatedAt(
+                savedExperience.getCreatedAt());
 
         response.setAiProcessingStatus(
-        savedExperience.getAiProcessingStatus().name());
+                savedExperience.getAiProcessingStatus().name());
 
         return response;
     }
@@ -145,10 +183,15 @@ Overall Suggestions:
 
                     response.setId(experience.getId());
 
-                    response.setUserId(experience.getUser().getId());
-                    response.setUserName(experience.getUser().getName());
+                    response.setUserId(
+                            experience.getUser().getId());
 
-                    response.setCompanyId(experience.getCompany().getId());
+                    response.setUserName(
+                            experience.getUser().getName());
+
+                    response.setCompanyId(
+                            experience.getCompany().getId());
+
                     response.setCompanyName(
                             experience.getCompany().getCompanyName());
 
@@ -179,13 +222,19 @@ Overall Suggestions:
                     response.setCreatedAt(
                             experience.getCreatedAt());
 
+                    // Return AI processing status
+                    response.setAiProcessingStatus(
+                            experience.getAiProcessingStatus().name());
+
                     return response;
                 })
                 .toList();
     }
 
+
     public List<InterviewExperienceResponse>
     getInterviewExperiencesByCompany(Long companyId) {
+
         List<InterviewExperience> experiences =
                 interviewExperienceRepository.findByCompanyId(companyId);
 
@@ -197,10 +246,15 @@ Overall Suggestions:
 
                     response.setId(experience.getId());
 
-                    response.setUserId(experience.getUser().getId());
-                    response.setUserName(experience.getUser().getName());
+                    response.setUserId(
+                            experience.getUser().getId());
 
-                    response.setCompanyId(experience.getCompany().getId());
+                    response.setUserName(
+                            experience.getUser().getName());
+
+                    response.setCompanyId(
+                            experience.getCompany().getId());
+
                     response.setCompanyName(
                             experience.getCompany().getCompanyName());
 
@@ -231,11 +285,15 @@ Overall Suggestions:
                     response.setCreatedAt(
                             experience.getCreatedAt());
 
-                    return response;
+                    // Return AI processing status
+                    response.setAiProcessingStatus(
+                            experience.getAiProcessingStatus().name());
 
+                    return response;
                 })
                 .toList();
     }
+
 
     public InterviewExperienceResponse getInterviewExperienceById(
             Long id) {
@@ -290,8 +348,13 @@ Overall Suggestions:
         response.setCreatedAt(
                 experience.getCreatedAt());
 
+        // Return AI processing status
+        response.setAiProcessingStatus(
+                experience.getAiProcessingStatus().name());
+
         return response;
     }
+
 
     private boolean hasText(String text) {
         return text != null && !text.trim().isEmpty();

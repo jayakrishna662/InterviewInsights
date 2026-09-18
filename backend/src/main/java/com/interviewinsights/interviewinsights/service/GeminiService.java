@@ -145,11 +145,12 @@ public class GeminiService {
         );
 
         GeminiResponse response = restClient.post()
-                .uri(apiUrl + "?key=" + apiKey)
-                .header("Content-Type", "application/json")
-                .body(request)
-                .retrieve()
-                .body(GeminiResponse.class);
+        .uri(apiUrl)
+        .header("x-goog-api-key", apiKey)
+        .header("Content-Type", "application/json")
+        .body(request)
+        .retrieve()
+        .body(GeminiResponse.class);
 
         return response.getCandidates()
                 .get(0)

@@ -32,7 +32,7 @@ public class User {
         @Column(nullable = false)
         private Role role;
 
-        @Column(name = "roll_number")
+        @Column(name = "roll_number", unique = true)
         private String rollNumber;
 
         @ManyToOne  // many users have same department

@@ -11,6 +11,8 @@ import java.util.List;
 public interface ExperienceQuestionRepository
         extends JpaRepository<ExperienceQuestion, Long> {
 
+            boolean existsByExperienceIdAndQuestionId(Long experienceId, Long questionId);
+
     List<ExperienceQuestion> findByExperienceId(
             Long experienceId);
 

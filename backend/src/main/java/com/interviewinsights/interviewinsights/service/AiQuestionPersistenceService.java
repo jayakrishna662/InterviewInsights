@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class AiQuestionPersistenceService {
@@ -34,17 +36,20 @@ public class AiQuestionPersistenceService {
             List<String> gd,
             InterviewExperience experience) {
 
-        saveQuestions(coding, QuestionCategory.CODING, experience);
-        saveQuestions(technical, QuestionCategory.TECHNICAL, experience);
-        saveQuestions(hr, QuestionCategory.HR, experience);
-        saveQuestions(aptitude, QuestionCategory.APTITUDE, experience);
-        saveQuestions(gd, QuestionCategory.GD, experience);
+        Set<Long> processedQuestionIds = new HashSet<>();
+
+        saveQuestions(coding, QuestionCategory.CODING, experience, processedQuestionIds);
+        saveQuestions(technical, QuestionCategory.TECHNICAL, experience, processedQuestionIds);
+        saveQuestions(hr, QuestionCategory.HR, experience, processedQuestionIds);
+        saveQuestions(aptitude, QuestionCategory.APTITUDE, experience, processedQuestionIds);
+        saveQuestions(gd, QuestionCategory.GD, experience, processedQuestionIds);
     }
 
     private void saveQuestions(
             List<String> questions,
             QuestionCategory category,
-            InterviewExperience experience) {
+            InterviewExperience experience,
+            Set<Long> processedQuestionIds) {
 
         if (questions == null) {
             return;
@@ -52,17 +57,27 @@ public class AiQuestionPersistenceService {
 
         for (String questionText : questions) {
 
-            Question savedQuestion =
-                    questionService.saveQuestion(questionText, category);
+    Question savedQuestion =
+            questionService.saveQuestion(questionText, category);
 
-            ExperienceQuestion experienceQuestion =
-                    new ExperienceQuestion();
+    boolean alreadyLinked =
+            experienceQuestionRepository
+                    .existsByExperienceIdAndQuestionId(
+                            experience.getId(),
+                            savedQuestion.getId()
+                    );
 
-            experienceQuestion.setExperience(experience);
-            experienceQuestion.setQuestion(savedQuestion);
-            experienceQuestion.setCreatedAt(LocalDateTime.now());
+    if (alreadyLinked) {
+        continue;
+    }
 
-            experienceQuestionRepository.save(experienceQuestion);
-        }
+    ExperienceQuestion experienceQuestion = new ExperienceQuestion();
+
+    experienceQuestion.setExperience(experience);
+    experienceQuestion.setQuestion(savedQuestion);
+    experienceQuestion.setCreatedAt(LocalDateTime.now());
+
+    experienceQuestionRepository.save(experienceQuestion);
+}
     }
 }

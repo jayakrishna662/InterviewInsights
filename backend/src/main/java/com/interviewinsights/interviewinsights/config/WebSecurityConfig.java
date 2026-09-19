@@ -51,6 +51,7 @@ public class WebSecurityConfig {
     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 )
                 .authorizeHttpRequests(authz -> authz // Decide who is allowed to access which URLs.
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()  // Anyone can access registration and login
                         .requestMatchers(HttpMethod.GET, "/api/companies/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/departments/**").hasRole("ADMIN")

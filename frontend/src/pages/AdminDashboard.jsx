@@ -27,7 +27,6 @@ export default function AdminDashboard() {
     totalStudents: 0
   });
 
-  // Render auto-deploy test
 
   const [companies, setCompanies] = useState([]);
   const [aiExperiences, setAiExperiences] = useState([]);

@@ -48,6 +48,21 @@ export default function AdminDashboard() {
     }
   }, [isAdmin]);
 
+  useEffect(() => {
+    if (!isAdmin) return;
+  
+    const interval = setInterval(async () => {
+      try {
+        const aiStatusData = await api.get('/admin/experiences/ai-status');
+        setAiExperiences(aiStatusData || []);
+      } catch (err) {
+        console.error('Failed to refresh AI status:', err);
+      }
+    }, 5000);
+  
+    return () => clearInterval(interval);
+  }, [isAdmin]);
+
   const handleRetryAi = async (experienceId) => {
     try {
       await api.post(`/admin/experiences/${experienceId}/ai/retry`);

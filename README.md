@@ -1,19 +1,8 @@
 # InterviewInsights- A platform for sharing Interview Experiences
 
-InterviewInsights is a web application that helps students share and explore interview experiences. Users can submit their interview experiences, browse experiences from different companies, and discover frequently asked interview questions. The application uses AI to extract interview questions from submitted experiences and organize them to help students prepare for future interviews.
+**Live Website:** https://interviewinsights-frontend.onrender.com
 
-## Tech Stack
-
-- Java 21
-- Spring Boot
-- Spring Security
-- JWT Authentication
-- Spring Data JPA
-- PostgreSQL
-- HTML
-- CSS
-- JavaScript
-- Gemini API
+InterviewInsights is a web application that helps students share and explore interview experiences. Students can submit their interview experiences, browse experiences from different companies, and discover frequently asked interview questions. The application uses AI to extract interview questions from submitted experiences, identify similar questions, and maintain question frequency so that commonly asked questions can be discovered more easily.
 
 ## Features
 
@@ -22,10 +11,45 @@ InterviewInsights is a web application that helps students share and explore int
 - **Interview Experience Submission:** Students can submit detailed interview experiences, including company, interview year, result, and round-wise experiences.
 - **Company-wise Experiences:** Browse interview experiences shared by students for different companies.
 - **AI-Powered Question Extraction:** Automatically extracts interview questions from submitted experiences using the Gemini API.
-- **AI-Based Duplicate Question Detection:** Uses text embeddings to identify similar interview questions and avoid duplicate entries.
-- **Question Frequency Tracking:** Maintains the frequency of interview questions to identify commonly asked questions across companies.
-- **Company, Batch, and Department Management:** Supports management of companies, batches, and departments for organized data.
-- **RESTful APIs:** Provides REST endpoints for managing users, interview experiences, companies, questions, batches, and departments.
+- **AI-Based Duplicate Question Detection:** Uses text embeddings to identify similar interview questions and reduce duplicate entries.
+- **Question Frequency Tracking:** Tracks the frequency of interview questions to identify commonly asked questions.
+- **Company, Batch, and Department Management:** Supports management of companies, batches, and departments.
+- **Admin Dashboard:** Provides administrators with tools to manage application data and monitor AI processing.
+- **RESTful APIs:** Provides REST APIs for authentication, interview experiences, companies, questions, batches, and departments.
+
+## Tech Stack
+### Frontend
+
+- React
+- Vite
+- JavaScript
+- HTML
+- CSS
+
+### Backend
+
+- Java 21
+- Spring Boot
+- Spring Security
+- JWT
+- Spring Data JPA
+- Hibernate
+- Maven
+
+### Database
+
+- PostgreSQL
+
+### AI
+
+- Google Gemini API
+- Text Embeddings
+
+### Deployment
+
+- Docker
+- Render
+- Supabase PostgreSQL
 
 ## Screenshots
 
@@ -72,43 +96,65 @@ InterviewInsights is a web application that helps students share and explore int
 <img width="1877" height="926" alt="ViewCompanyWiseQuestions2" src="https://github.com/user-attachments/assets/f5207071-bfcd-43e6-803f-4973804aca36" />
 
 
-  ## How It Works
+ ## How It Works
 
 1. Users register and log in using JWT authentication.
 2. Students submit their interview experiences.
-3. The experience is saved immediately in the database.
+3. The interview experience is saved in the database.
 4. Interview questions are extracted in the background using the Gemini API.
-5. Similar questions are identified using embeddings, and duplicate questions are merged by increasing their frequency.
+5. Similar questions are identified using text embeddings, and duplicate questions are handled by updating their frequency.
 6. Extracted questions are stored and linked to the corresponding interview experience.
-7. Students can browse interview experiences and view frequently asked interview questions.
+7. Students can browse interview experiences and discover frequently asked interview questions.
 
 ## Setup
 
-### Requirements
+**Prerequisites**
+  - Java 21
+  - Maven
+  - Node.js and npm
+  - PostgreSQL
+  - Gemini API key
 
-- Java 21
-- Maven
-- PostgreSQL
-- Gemini API Key
-
-### Steps
-
-1. Clone this repository.
+ ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/jayakrishna/InterviewInsights.git
+git clone https://github.com/jayakrishna662/InterviewInsights.git
 cd InterviewInsights
 ```
+### 2. Configure PostgreSQL
 
-2. Open the project in IntelliJ IDEA and allow Maven to download the required dependencies.
- 
-3. Create a PostgreSQL database (for example, `interview_insights`).
+Create a PostgreSQL database for the application.
 
-4. Update `src/main/resources/application.properties` with your PostgreSQL credentials and Gemini API key.
+Make sure PostgreSQL is running before starting the backend
 
-5. Run the `InterviewInsightsApplication` class.
+### 3. Configure Backend Environment Variables
+   Go to the backend directory , create an .env file<br>
+   Open .env and replace the placeholder values with your own:<br><br>
+   DB_URL=jdbc:postgresql://localhost:5432/interview_insights<br>
+   DB_USERNAME=postgres<br>
+   DB_PASSWORD=your_postgres_password<br>
+   JWT_SECRET=your_jwt_secret<br>
+   GEMINI_API_KEY=your_gemini_api_key<br>
 
-6. Open the application in your browser at:
-
+### 4. Run the Backend
+```bash
+mvnw.cmd spring-boot:run
+```
+The backend will start on:
+```bash
 http://localhost:8080
- 
+```
+### 5. Run the Frontend
+Open a new terminal and navigate to the frontend directory <br>
+Install the required dependencies: 
+```bash
+npm install
+```
+Start the development server: 
+```bash
+npm run dev
+```
+Vite will display the frontend URL in the terminal. By default, it will be available at:
+```bash
+http://localhost:5173
+```

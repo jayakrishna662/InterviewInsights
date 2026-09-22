@@ -18,38 +18,14 @@ InterviewInsights is a web application that helps students share and explore int
 - **RESTful APIs:** Provides REST APIs for authentication, interview experiences, companies, questions, batches, and departments.
 
 ## Tech Stack
-### Frontend
 
-- React
-- Vite
-- JavaScript
-- HTML
-- CSS
-
-### Backend
-
-- Java 21
-- Spring Boot
-- Spring Security
-- JWT
-- Spring Data JPA
-- Hibernate
-- Maven
-
-### Database
-
-- PostgreSQL
-
-### AI
-
-- Google Gemini API
-- Text Embeddings
-
-### Deployment
-
-- Docker
-- Render
-- Supabase PostgreSQL
+| Category | Technologies |
+|----------|--------------|
+| **Frontend** | React, Vite, JavaScript, HTML, CSS |
+| **Backend** | Java 21, Spring Boot, Spring Security, JWT, Spring Data JPA, Hibernate, Maven |
+| **Database & Migrations** | PostgreSQL, Flyway |
+| **AI** | Google Gemini API, Text Embeddings |
+| **Deployment & Infrastructure** | Docker, Render, Supabase |
 
 ## Screenshots
 
@@ -127,14 +103,36 @@ Create a PostgreSQL database for the application.
 
 Make sure PostgreSQL is running before starting the backend
 
-### 3. Configure Backend Environment Variables
-   Go to the backend directory , create an .env file<br>
-   Open .env and replace the placeholder values with your own:<br><br>
-   DB_URL=jdbc:postgresql://localhost:5432/interview_insights<br>
-   DB_USERNAME=postgres<br>
-   DB_PASSWORD=your_postgres_password<br>
-   JWT_SECRET=your_jwt_secret<br>
-   GEMINI_API_KEY=your_gemini_api_key<br>
+### 3. Configure the Backend
+
+Open the following file:
+
+```text
+backend/src/main/resources/application.properties
+```
+
+For local development, replace the environment variable placeholders with your local PostgreSQL credentials, JWT secret, and Gemini API key.
+
+Update the following properties:
+
+```properties
+jwt.secret=your_jwt_secret
+
+spring.datasource.url=jdbc:postgresql://localhost:5432/interview_insights
+spring.datasource.username=postgres
+spring.datasource.password=your_postgres_password
+
+gemini.api.key=your_gemini_api_key
+```
+
+Replace the placeholder values with your own:
+
+- `your_jwt_secret` — A strong secret key used for JWT authentication.
+- `postgres` — Your PostgreSQL username.
+- `your_postgres_password` — Your PostgreSQL password.
+- `your_gemini_api_key` — Your Google Gemini API key.
+
+The remaining properties in `application.properties` can be left unchanged.
 
 ### 4. Run the Backend
 ```bash

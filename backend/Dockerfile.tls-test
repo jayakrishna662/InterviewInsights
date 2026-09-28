@@ -1,0 +1,7 @@
+FROM eclipse-temurin:21-jdk
+
+RUN apt-get update \
+    && apt-get install -y openssl \
+    && rm -rf /var/lib/apt/lists/*
+
+CMD ["sh", "-c", "echo 'Testing TLS to Supabase...'; openssl s_client -connect aws-0-ap-southeast-1.pooler.supabase.com:5432 -servername aws-0-ap-southeast-1.pooler.supabase.com -tls1_3 </dev/null"]

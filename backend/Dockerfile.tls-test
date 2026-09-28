@@ -1,7 +1,5 @@
-FROM eclipse-temurin:21-jdk
+FROM alpine:3.20
 
-RUN apt-get update \
-    && apt-get install -y openssl \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache openssl
 
-CMD ["sh", "-c", "echo 'Testing TLS to Supabase...'; openssl s_client -connect aws-0-ap-southeast-1.pooler.supabase.com:5432 -servername aws-0-ap-southeast-1.pooler.supabase.com -tls1_3 </dev/null"]
+CMD ["sh", "-c", "echo '===== SUPABASE TLS TEST ====='; openssl s_client -connect aws-0-ap-southeast-1.pooler.supabase.com:5432 -servername aws-0-ap-southeast-1.pooler.supabase.com -tls1_3 </dev/null; echo '===== TLS TEST FINISHED ====='; mkdir -p /var/www; echo 'TLS test container is running' > /var/www/index.html; exec busybox httpd -f -p 10000 -h /var/www"]

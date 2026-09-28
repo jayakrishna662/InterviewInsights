@@ -37,12 +37,6 @@ public class RateLimitFilter extends OncePerRequestFilter {
             FilterChain filterChain)
             throws ServletException, IOException {
 
-    // CORS preflight requests should not be rate limited
-    if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
-        filterChain.doFilter(request, response);
-        return;
-    }
-
         String clientIp = request.getRemoteAddr();
 
         Bucket bucket = buckets.computeIfAbsent(

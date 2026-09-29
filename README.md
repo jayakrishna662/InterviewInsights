@@ -1,6 +1,6 @@
 # InterviewInsights- A platform for sharing Interview Experiences
 
-**Live Website:** https://interviewinsights-frontend.onrender.com
+**Live Website:** https://interview-insights-ebon.vercel.app/
 
 InterviewInsights is a web application that helps students share and explore interview experiences. Students can submit their interview experiences, browse experiences from different companies, and discover frequently asked interview questions. The application uses AI to extract interview questions from submitted experiences, identify similar questions, and maintain question frequency so that commonly asked questions can be discovered more easily.
 
@@ -25,13 +25,14 @@ InterviewInsights is a web application that helps students share and explore int
 | **Backend** | Java 21, Spring Boot, Spring Security, JWT, Spring Data JPA, Hibernate, Maven |
 | **Database & Migrations** | PostgreSQL, Flyway |
 | **AI** | Google Gemini API, Text Embeddings |
-| **Deployment & Infrastructure** | Docker, Render, Supabase |
+| **Deployment & Infrastructure** | Docker, Vercel, Supabase |
 
 ## Screenshots
 
 ### Home Page
 
-<img width="1917" height="612" alt="Homepage" src="https://github.com/user-attachments/assets/fc3d9c3e-c889-4bc9-bd7e-b0fc2cf661e7" />
+<img width="1677" height="722" alt="image" src="https://github.com/user-attachments/assets/61adaa14-1a4a-4cd0-8cdb-ba20a8a0b004" />
+
 
 
 ### User Registration

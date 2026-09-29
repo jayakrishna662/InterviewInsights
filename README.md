@@ -1,6 +1,6 @@
 # InterviewInsights- A platform for sharing Interview Experiences
 
-**Live Website:** https://interviewinsights-frontend.onrender.com
+**Live Website:** https://interview-insights-ebon.vercel.app/
 
 InterviewInsights is a web application that helps students share and explore interview experiences. Students can submit their interview experiences, browse experiences from different companies, and discover frequently asked interview questions. The application uses AI to extract interview questions from submitted experiences, identify similar questions, and maintain question frequency so that commonly asked questions can be discovered more easily.
 
@@ -25,52 +25,42 @@ InterviewInsights is a web application that helps students share and explore int
 | **Backend** | Java 21, Spring Boot, Spring Security, JWT, Spring Data JPA, Hibernate, Maven |
 | **Database & Migrations** | PostgreSQL, Flyway |
 | **AI** | Google Gemini API, Text Embeddings |
-| **Deployment & Infrastructure** | Docker, Render, Supabase |
+| **Deployment & Infrastructure** | Docker, Vercel, Supabase |
 
 ## Screenshots
 
 ### Home Page
 
-<img width="1917" height="612" alt="Homepage" src="https://github.com/user-attachments/assets/fc3d9c3e-c889-4bc9-bd7e-b0fc2cf661e7" />
+<img width="1677" height="722" alt="image" src="https://github.com/user-attachments/assets/61adaa14-1a4a-4cd0-8cdb-ba20a8a0b004" />
+
 
 
 ### User Registration
-<img width="777" height="895" alt="RegistrationPage" src="https://github.com/user-attachments/assets/329533b8-c116-4019-a6e5-d67b3b81c778" />
+<img width="552" height="782" alt="image" src="https://github.com/user-attachments/assets/3095cb27-074c-4fc7-a21a-f01be53aee59" />
+
 
 
 ### User Login
 
-<img width="1077" height="817" alt="LoginPage" src="https://github.com/user-attachments/assets/001eafc3-83b0-45e2-a70c-96a570bfbbe6" />
-
-
-### Browse Companies
-
-<img width="1913" height="772" alt="ListOfCompaniesPage" src="https://github.com/user-attachments/assets/31c06a2a-6426-4985-ac32-808c0a3d360c" />
-
-
-### Company Wise Experiences
-<img width="1912" height="698" alt="SpecificCompanyExperiencesPage" src="https://github.com/user-attachments/assets/a71fc764-7deb-4afe-9983-44475b42caeb" />
+<img width="670" height="542" alt="image" src="https://github.com/user-attachments/assets/175d2e9e-f205-49ee-9a0a-2b18a45c8f31" />
 
 
 ### Experience Details
-<img width="1886" height="892" alt="SpecificCompanyUserExperiencePage" src="https://github.com/user-attachments/assets/dc9a6ea9-5231-46bd-a1dc-56789442d6e3" />
-
-<img width="1898" height="898" alt="SpecificCompanyUserExperiencePage2" src="https://github.com/user-attachments/assets/fb1e471f-2656-4ee3-84d8-52cf213b8940" />
+<img width="1300" height="561" alt="image" src="https://github.com/user-attachments/assets/11370a48-006e-4abb-958d-2d8ac1744dff" />
+<img width="1290" height="686" alt="image" src="https://github.com/user-attachments/assets/8bebd070-a1e1-4bd7-9685-f0ad41a9f140" />
 
 
 ### Submit Interview Experience
 
-<img width="825" height="912" alt="ExperienceSubmittionForm" src="https://github.com/user-attachments/assets/d5a6112e-fe03-40f0-a633-8d37a1a4fdbd" />
+<img width="683" height="797" alt="image" src="https://github.com/user-attachments/assets/20be04e0-bdfc-42b0-be1e-cf5b74526802" />
 
 
 ### Question Filters
-
-<img width="1905" height="677" alt="ViewComapanyWiseQuestions1" src="https://github.com/user-attachments/assets/bf18c9de-466c-4883-81e7-16c2ce3571f8" />
+<img width="1501" height="546" alt="image" src="https://github.com/user-attachments/assets/33b76d8d-3937-451a-a7db-e3208b1f940c" />
 
 
 ### Company Wise Questions
-<img width="1877" height="926" alt="ViewCompanyWiseQuestions2" src="https://github.com/user-attachments/assets/f5207071-bfcd-43e6-803f-4973804aca36" />
-
+<img width="1198" height="778" alt="image" src="https://github.com/user-attachments/assets/aff2d8cc-a0e9-4e0a-ad85-338fcd77efae" />
 
  ## How It Works
 

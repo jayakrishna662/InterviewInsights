@@ -41,4 +41,38 @@ public class InterviewExperienceResponse {
 
     private LocalDateTime createdAt;
 
+    public InterviewExperienceResponse(
+        Long id,
+        Long userId,
+        String userName,
+        Long companyId,
+        String companyName,
+        Integer interviewYear,
+        String result,
+        String aiProcessingStatus,
+        String aptitudeExperience,
+        String codingExperience,
+        String technicalExperience,
+        String hrExperience,
+        String gdExperience,
+        String overallSuggestions,
+        LocalDateTime createdAt
+) {
+    this.id = id;
+    this.userId = userId;
+    this.userName = userName;
+    this.companyId = companyId;
+    this.companyName = companyName;
+    this.interviewYear = interviewYear;
+    this.result = result;
+    this.aiProcessingStatus = aiProcessingStatus;
+    this.aptitudeExperience = aptitudeExperience;
+    this.codingExperience = codingExperience;
+    this.technicalExperience = technicalExperience;
+    this.hrExperience = hrExperience;
+    this.gdExperience = gdExperience;
+    this.overallSuggestions = overallSuggestions;
+    this.createdAt = createdAt;
+}
+
 }

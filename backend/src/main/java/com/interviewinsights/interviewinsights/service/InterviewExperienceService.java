@@ -171,65 +171,8 @@ public class InterviewExperienceService {
 
 
     public List<InterviewExperienceResponse> getAllInterviewExperiences() {
-
-        List<InterviewExperience> experiences =
-                interviewExperienceRepository.findAll();
-
-        return experiences.stream()
-                .map(experience -> {
-
-                    InterviewExperienceResponse response =
-                            new InterviewExperienceResponse();
-
-                    response.setId(experience.getId());
-
-                    response.setUserId(
-                            experience.getUser().getId());
-
-                    response.setUserName(
-                            experience.getUser().getName());
-
-                    response.setCompanyId(
-                            experience.getCompany().getId());
-
-                    response.setCompanyName(
-                            experience.getCompany().getCompanyName());
-
-                    response.setInterviewYear(
-                            experience.getInterviewYear());
-
-                    response.setResult(
-                            experience.getResult().name());
-
-                    response.setAptitudeExperience(
-                            experience.getAptitudeExperience());
-
-                    response.setCodingExperience(
-                            experience.getCodingExperience());
-
-                    response.setTechnicalExperience(
-                            experience.getTechnicalExperience());
-
-                    response.setHrExperience(
-                            experience.getHrExperience());
-
-                    response.setGdExperience(
-                            experience.getGdExperience());
-
-                    response.setOverallSuggestions(
-                            experience.getOverallSuggestions());
-
-                    response.setCreatedAt(
-                            experience.getCreatedAt());
-
-                    // Return AI processing status
-                    response.setAiProcessingStatus(
-                            experience.getAiProcessingStatus().name());
-
-                    return response;
-                })
-                .toList();
-    }
+    return interviewExperienceRepository.findAllResponses();
+}
 
 
     public List<InterviewExperienceResponse>
